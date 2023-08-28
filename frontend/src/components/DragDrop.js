@@ -12,6 +12,26 @@ const ImageInputBox = styled.div`
   border-radius: 20px;
   border: 5px #ddc7b2 dashed;
   box-sizing: border-box;
+  position: relative;
+`;
+
+const ImageButton = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+
+  & > label {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  & > input {
+    width: 0;
+    height: 0;
+  }
 `;
 
 export default function DragDrop({ setFiles, files }) {
@@ -116,6 +136,27 @@ export default function DragDrop({ setFiles, files }) {
   return (
     <>
       <ImageInputBox ref={dragRef}>
+        <ImageButton>
+          <input
+            multiple
+            type="file"
+            id="upload"
+            accept="image/gif, image/jpeg, image/png"
+            onChange={(event) => {
+              const selected = Array.from({
+                length: event.target.files.length,
+              }).map((_, index) => {
+                return {
+                  id: files.length + 1 + index,
+                  object: event.target.files[index],
+                };
+              });
+              console.log(selected);
+              setFiles([...files, ...selected]);
+            }}
+          />
+          <label htmlFor="upload" />
+        </ImageButton>
         <ImageIcon />
         <span>Drag images to upload</span>
       </ImageInputBox>

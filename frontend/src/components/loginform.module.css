@@ -1,5 +1,21 @@
-body {
-  background-color: #f4ece6; /* 원하는 배경색으로 변경 */
+.mainWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.mainImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: blur(3px);
+}
+
+.loginformbox {
   margin: 0;
   padding: 0;
   display: flex;
@@ -16,7 +32,7 @@ body {
   background: #f4ece6;
 }
 
-/* AdobeStock_283416094 1 */
+/* AdobeStock_283416094 1
 .adobeStock {
   position: absolute;
   width: 780px;
@@ -26,7 +42,7 @@ body {
   background: url(background_signup.png);
   background-size: cover;
   filter: blur(3px);
-}
+} */
 
 /* 카카오 로그인 */
 .kakaoLogin {
@@ -86,6 +102,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 /* 로그인 버튼 */
@@ -110,11 +127,4 @@ body {
 .idLine {
   position: absolute;
   width: 331px;
-}
-
-body {
-  background-image: url("background_signup.png");
-  background-repeat: no-repeat;
-  background-size: auto 100vh;
-  background-position: center;
 }
