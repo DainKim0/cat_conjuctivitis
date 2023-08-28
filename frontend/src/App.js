@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GlobalStyle } from "./global-style";
-import DragDrop from "./components/DragDrop";
 import Upload from "./pages/Upload";
 import Result from "./pages/Result";
 import Main from "./pages/Main";

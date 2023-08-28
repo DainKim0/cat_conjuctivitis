@@ -3,7 +3,6 @@ import styled from "styled-components";
 import InspectHeader from "../components/InspectHeader";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import bobbyImage from "../asset/bobby.png";
 import kurtImage from "../asset/kurt.png";
 
 const ButtonContainer = styled.div`
@@ -93,7 +92,7 @@ function DiagnosisHistory() {
       </ButtonContainer>
       <RectangleWrapper>
         <Rectangle>
-          <CatImage src={bobbyImage} alt="Cat 1" />
+          <CatImage src={require("../asset/images/bobby.png")} alt="Cat 1" />
           <TextWrapper>
             <Info>Name: Kurt</Info>
             <Info>Age: 8</Info>
