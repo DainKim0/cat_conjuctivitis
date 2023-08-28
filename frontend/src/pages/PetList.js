@@ -9,9 +9,15 @@ import { API } from "../config";
 const MyPetBox = styled.div`
   min-height: 100vh;
   background: #faf5f1;
+  padding: 0 30px;
+  box-sizing: border-box;
+  font-family: math;
+  @media (max-width: 600px) {
+    padding: 0;
+  }
 `;
 
-const MypetMain = styled.div`
+const MypetMain = styled.main`
   padding: 50px 0;
 `;
 

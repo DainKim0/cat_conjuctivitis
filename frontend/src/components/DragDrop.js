@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as ImageIcon } from "../asset/ImageIcon.svg";
+import { ReactComponent as ImageIcon } from "../asset/icons/ImageIcon.svg";
 
 const ImageInputBox = styled.div`
   height: 50vh;

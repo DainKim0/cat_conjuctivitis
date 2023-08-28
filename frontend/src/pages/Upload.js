@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { ReactComponent as ImageIcon } from "../asset/ImageIcon.svg";
+import { ReactComponent as ImageIcon } from "../asset/icons/ImageIcon.svg";
 import InspectHeader from "../components/InspectHeader";
 import { useNavigate } from "react-router-dom";
 import DragDrop from "../components/DragDrop";
@@ -35,6 +35,7 @@ const UploadCotainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   gap: 40px;
+  max-width: 1000px;
 `;
 
 const ImageButton = styled.div`
@@ -93,7 +94,7 @@ export default function Upload() {
   }, [files]);
   return (
     <UploadBox>
-      <InspectHeader text=" Image Upload" />
+      <InspectHeader text="Image Upload" />
       <UploadMain>
         <UploadCotainer files={!files.length}>
           <DragDrop files={files} setFiles={setFiles} />

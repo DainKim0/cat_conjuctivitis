@@ -21,7 +21,7 @@ export const API = {
   // 진단 정보
   DIAGNOSIS_INFO: `${BASE_URL}/uploader/diagnosis/<str:pet_name>/list-diagnosis`,
   // 진단 전체 목록
-  DIAGNOSIS_LIST: `${BASE_URL}/uploader/diagnosis/`,
+  DIAGNOSIS_LIST: `${BASE_URL}/uploader/diagnosis`,
 
   //펫 생성
   PET_CREATE: `${BASE_URL}/uploader/pet/create-pet`,

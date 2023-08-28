@@ -37,6 +37,8 @@ const Button = styled.button`
   border-radius: 30px;
   border: none;
   font-weight: bold;
+  margin-top: 30px;
+  width: 100%;
 `;
 
 const InputWrapper = styled.div`

@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as HomeIcon } from ".././asset/Home.svg";
+import { ReactComponent as HomeIcon } from "../asset/icons/Home.svg";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,9 @@ const HeaderText = styled.h2`
   transform: translate(-50%, -50%);
   font-weight: 700;
   font-size: 35px;
+  @media (max-width: 600px) {
+    font-size: 25px;
+  }
 `;
 
 export default function InspectHeader({ text }) {
