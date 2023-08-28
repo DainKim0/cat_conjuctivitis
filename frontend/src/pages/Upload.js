@@ -21,47 +21,28 @@ const UploadMain = styled.main`
   display: flex;
   padding: 40px 0;
   gap: 40px;
+  justify-content: center;
 
   @media (max-width: 600px) {
     flex-direction: column;
-    justify-content: center;
     align-items: center;
   }
 `;
 
 const UploadCotainer = styled.div`
-  width: ${({ files }) => (files ? 50 : 100)}%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 40px;
 `;
-const ImageText = styled.span``;
 
 const ImageButton = styled.div`
-  & > label > div {
-    background: #9f9388;
-    padding: 15px 0;
-    border: 2px #746b62 solid;
-    text-align: center;
-    border-radius: 20px;
-  }
-
-  & > input {
-    width: 0;
-    height: 0;
-  }
-`;
-const ImageInputBox = styled.div`
-  height: 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f4ece6;
+  background: #9f9388;
+  padding: 15px 0;
+  border: 2px #746b62 solid;
+  text-align: center;
   border-radius: 20px;
-  border: 5px #ddc7b2 dashed;
-  box-sizing: border-box;
 `;
 
 const ProcessBar = styled.div`
@@ -116,16 +97,7 @@ export default function Upload() {
       <UploadMain>
         <UploadCotainer files={!files.length}>
           <DragDrop files={files} setFiles={setFiles} />
-          <ImageButton>
-            <input
-              type="file"
-              id="upload"
-              accept="image/gif, image/jpeg, image/png"
-            />
-            <label htmlFor="upload">
-              <div>Image Upload</div>
-            </label>
-          </ImageButton>
+          <ImageButton>Image Upload</ImageButton>
         </UploadCotainer>
         {files.length > 0 && (
           <UploadCotainer files={!files.length}>
@@ -142,8 +114,7 @@ export default function Upload() {
                       <div>{name}</div>
                       <ProcessBar></ProcessBar>
                       <ProcessText>
-                        <div>50% done</div>
-                        <div>90KB/sec</div>
+                        <div>100% done</div>
                       </ProcessText>
                     </ProcessInfo>
                   </ProcessItem>
