@@ -11,12 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 ###################################
-# local.settings.json 내 value 값들을 받아들여, 현재 프로세스 환경변수 내역을 업데이트한다. 
+# local.settings.json 내 value 값들을 받아들여, 현재 프로세스 환경변수 내역을 업데이트한다.
 import os
 
 import json
-from environ import Env 
-from pathlib import Path 
+from environ import Env
+from pathlib import Path
 
 env = Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +26,7 @@ try:
         local_settings = json.load(f)
         for key, value in local_settings['Values'].items():
             env.ENVIRON[key] = value
-except(IOError, KeyError):
+except (IOError, KeyError):
     pass
 ###################################
 
@@ -41,7 +41,7 @@ except(IOError, KeyError):
 SECRET_KEY = '5(!&t(*4iz)c1k(=ygr8ivbpeoe-p7ex7uz@7rvzdg+9u8!5p+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -56,12 +56,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-    
+
     'rest_framework',
     'django.contrib.auth',
     'corsheaders',
     "whitenoise.runserver_nostatic",
-    
+
     'blog',
     'uploader',
 ]
@@ -70,14 +70,14 @@ MIDDLEWARE = [
     # CORS
     'corsheaders.middleware.CorsMiddleware',
     # 'django.middleware.common.CommonMiddleware',
-    
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
-    
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -111,11 +111,11 @@ WSGI_APPLICATION = 'dj_pr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hanium',
-        'USER' : 'yoonlee',
-        'PASSWORD' : 'yoonlee',
-        'HOST' : 'localhost',
-        'PORT' : '5432'
+        'NAME': 'hanium', #database 이름 입력
+        'USER': 'user', #수정
+        'PASSWORD': 'gave6789', #수정
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -146,7 +146,7 @@ DATABASES = {
 #             'loggers': {
 #                 'djongo': {
 #                     'level': 'DEBUG',
-#                     'propogate': False,                        
+#                     'propogate': False,
 #                 }
 #             },
 #          },
@@ -170,7 +170,7 @@ DATABASES = {
 #                 "host": "mongodb+srv://Yooonlee:Yooonlee@boilerplate.eb2feiy.mongodb.net/?retryWrites=true&w=majority",
 #                 "name": 'mytestdb',
 #                 "authMechanism" : "SCRAM-SHA-1",
-#             }  
+#             }
 #         }
 # }
 
@@ -181,7 +181,7 @@ DATABASES = {
 #             'ENFORCE_SCHEMA': False,
 #             'CLIENT': {
 #                 "host": "mongodb+srv://Yooonlee:Yooonlee@boilerplate.eb2feiy.mongodb.net/?retryWrites=true&w=majority",
-#             }  
+#             }
 #         }
 # }
 
@@ -224,26 +224,29 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 # STATIC_URL = '/static/'
-## local 
-STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")  
-STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "_static")  
+# local
+STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")
+STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "_static")
 
 
-## azure_ver 
-# STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")  
+# azure_ver
+# STATIC_URL = os.environ.get("DJANGO_STATIC_URL", "/static/")
 # # STATIC_ROOT : azure 관련 없음
-# STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "_static")  
+# STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "_static")
 # STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage') ## 배포관련?
 
-STATICFILES_STORAGE  = 'dj_pr.storages.StaticAzureStorage'
-DEFAULT_FILE_STORAGE  = 'dj_pr.storages.MediaAzureStorage'
+# STATICFILES_STORAGE = 'dj_pr.storages.StaticAzureStorage'
+# DEFAULT_FILE_STORAGE = 'dj_pr.storages.MediaAzureStorage'
 
 # 미디어 경로를 추가
-MEDIA_URL = '/media/' 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.parent / 'media'
-
 
 
 # AZURE_ACCOUNT_NAME = env.str('yooonlee0b79fa')
 # AZURE_ACCOUNT_KEY = env.str('bkMC4GNh75Fi8kA+i4G5MYNrEbdSb+ysk57BO8HtS7F2K67Y3DS7paI/ytKeTh0OI/t8Ch7A1dF9+AStsL0TyQ==')
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:3000",
+)
