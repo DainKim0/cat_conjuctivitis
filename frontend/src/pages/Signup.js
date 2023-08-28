@@ -16,10 +16,7 @@ function Signup() {
   }
   return (
     <div className={styles.mainWrap}>
-      <div className={styles.mainImgBox}>
-        {/* 회원가입폼 컴포넌트 불러옴 => props로 handleClick 함수 전달 */}
-        <SignupForm handleClick={handleClick} />
-      </div>
+      <SignupForm handleClick={handleClick} />
     </div>
   );
 }
