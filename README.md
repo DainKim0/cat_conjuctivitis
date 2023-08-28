@@ -15,7 +15,12 @@ BACKEND
 3. 가상환경 실행
    `source myvenv/Scripts/activate`
 4. requirements.txt 위치로 이동
+   `cd backend/`
    `pip install -r requirements.txt`
+
+5. 파이썬 실행해보기
+   `cd dj_pr`
+   `python manage.py runserver`
 
 ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6275e49f-78f4-438d-a53f-efc0f69b7f6b/Untitled.png)
 

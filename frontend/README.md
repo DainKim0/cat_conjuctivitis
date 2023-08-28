@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-프로젝트 소개:
-사전에 학습시킨 AI로 고양이가 결막염에 걸렸는지 여부를 확인할 수 있는 프로그램이다.
-
-FRONTEND
-언어:REACT
-
-BACKEND
-언어: DJANGO
 =======
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -78,4 +70,5 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> ea9077796786b53fec7926aea06bb4cdea05ef3e
+
+> > > > > > > ea9077796786b53fec7926aea06bb4cdea05ef3e

@@ -1,139 +1,89 @@
 import React from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import mainBackground from "../asset/main_background.png";
-import diagnosisIcon from "../asset/diagnosis.png";
-import LoginbuttonImg from "../asset/loginbutton.png";
-import SignupbuttonImg from "../asset/signup.png";
-import MyPagebuttonImg from "../asset/Mypagebutton.png";
-
-const FullScreenImage = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f3c4a0;
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
+import { ReactComponent as Hexagon } from "../asset/icons/Hexagon.svg";
 
 const BackgroundImage = styled.img`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  left: 0;
+  top: 0;
 `;
 
-const IconContainer = styled.div`
+const BackgroundIcons = styled.div`
   position: absolute;
-  top: calc(33% + 20px);
-  right: calc(54.5% + 20px);
-  max-width: 50%;
-  max-height: 50%;
+
+  &:nth-child(2) {
+    top: 10%;
+    left: 20%;
+  }
+  &:nth-child(3) {
+    top: calc(10% + 290px);
+    left: calc(20% + 246px);
+  }
+  &:nth-child(4) {
+    top: calc(10% + 580px);
+    left: calc(20% + 105px);
+  }
+
+  & > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
-const Icon = styled.img`
-  width: 200px;
-  height: 220px;
-  cursor: pointer;
-  opacity: 0;
-`;
+const BackgroundLink = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  gap: 8px;
+  font-weight: bold;
+  margin-top: 10px;
 
-const LoginButton = styled.img`
-  position: absolute;
-  top: calc(2% + 40px);
-  right: calc(67% + 20px);
-  max-width: 50%;
-  max-height: 40%;
-  width: 200px;
-  height: 130px;
-  opacity: 0;
-`;
-
-const SignupButton = styled.img`
-  position: absolute;
-  top: calc(23% + 40px);
-  right: calc(67% + 20px);
-  max-width: 50%;
-  max-height: 50%;
-  width: 200px;
-  height: 50px;
-  opacity: 0;
-`;
-
-const MyPageButton = styled.img`
-  position: absolute;
-  top: calc(62% + 40px);
-  right: calc(61% + 20px);
-  max-width: 50%;
-  max-height: 50%;
-  width: 150px;
-  height: 150px;
-  opacity: 0;
+  & > span {
+    cursor: pointer;
+  }
 `;
 
 function Main() {
   const navigate = useNavigate();
 
-  const handleIconClick = () => {
-    navigate("/upload");
-  };
-
-  const handleButtonClick = () => {
-    navigate("/login");
-  };
-
-  const handleSignupButtonClick = () => {
-    navigate("/signup");
-  };
-
-  const handleMyPageButtonClick = () => {
-    navigate("/petlist");
-  };
-
   return (
     <div>
-      <FullScreenImage>
-        <ImageContainer>
-          <BackgroundImage src={mainBackground} alt="Main Background" />
-          <IconContainer>
-            <Icon
-              src={diagnosisIcon}
-              alt="Diagnosis Icon"
-              onClick={handleIconClick}
-            />
-          </IconContainer>
-          <LoginButton
-            src={LoginbuttonImg}
-            alt="Login Button"
-            onClick={handleButtonClick}
-          />
-          <SignupButton
-            src={SignupbuttonImg}
-            alt="Signup Button"
-            onClick={handleSignupButtonClick}
-          />
-          <MyPageButton
-            src={MyPagebuttonImg}
-            alt="My Page Button"
-            onClick={handleMyPageButtonClick}
-          />
-        </ImageContainer>
-      </FullScreenImage>
+      <BackgroundImage src={require("../asset/mainImg.png")} />
+      <BackgroundIcons>
+        <div>
+          <img src={require("../asset/images/login.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/login")}>Log In</span>
+            <span onClick={() => navigate("/signup")}>Sign Up</span>
+          </BackgroundLink>
+        </div>
+        <Hexagon />
+      </BackgroundIcons>
+      <BackgroundIcons>
+        <div>
+          <img src={require("../asset/images/diagnosis.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/upload")}>Diagnosis</span>
+          </BackgroundLink>
+        </div>
+        <Hexagon />
+      </BackgroundIcons>
+      <BackgroundIcons>
+        <div>
+          <img src={require("../asset/images/mypage.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/petlist")}>My Page</span>
+          </BackgroundLink>
+        </div>
+        <Hexagon />
+      </BackgroundIcons>
     </div>
   );
 }
