@@ -16,6 +16,10 @@ function Signup() {
   }
   return (
     <div className={styles.mainWrap}>
+      <img
+        src={require("../asset/images/background_signup.png")}
+        className={styles.mainImg}
+      />
       <SignupForm handleClick={handleClick} />
     </div>
   );
