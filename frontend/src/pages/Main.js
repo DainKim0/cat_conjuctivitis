@@ -52,67 +52,35 @@ const BackgroundLink = styled.div`
 
 function Main() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(localStorage.getItem("jwt"));
 
   return (
     <div>
       <BackgroundImage src={require("../asset/mainImg.png")} />
       <BackgroundIcons>
         <div>
-          {user ? (
-            <BackgroundLink>
-              <span
-                onClick={() => {
-                  localStorage.removeItem("jwt");
-                  setUser("");
-                }}
-              >
-                Log Out
-              </span>
-            </BackgroundLink>
-          ) : (
-            <>
-              <img src={require("../asset/images/login.png")} />
-              <BackgroundLink>
-                <span onClick={() => navigate("/login")}>Log In</span>
-                <span onClick={() => navigate("/signup")}>Sign Up</span>
-              </BackgroundLink>
-            </>
-          )}
+          <img src={require("../asset/images/login.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/user/login")}>Log In</span>
+            <span onClick={() => navigate("/signup")}>Sign Up</span>
+          </BackgroundLink>
         </div>
         <Hexagon />
       </BackgroundIcons>
       <BackgroundIcons>
         <div>
-          {user ? (
-            <>
-              <img src={require("../asset/images/diagnosis.png")} />
-              <BackgroundLink>
-                <span onClick={() => navigate("/upload")}>Diagnosis</span>
-              </BackgroundLink>
-            </>
-          ) : (
-            <BackgroundLink>
-              <span>Login Please</span>
-            </BackgroundLink>
-          )}
+          <img src={require("../asset/images/diagnosis.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/upload")}>Diagnosis</span>
+          </BackgroundLink>
         </div>
         <Hexagon />
       </BackgroundIcons>
       <BackgroundIcons>
         <div>
-          {user ? (
-            <>
-              <img src={require("../asset/images/mypage.png")} />
-              <BackgroundLink>
-                <span onClick={() => navigate("/petlist")}>My Page</span>
-              </BackgroundLink>
-            </>
-          ) : (
-            <BackgroundLink>
-              <span onClick={() => navigate("/login")}>Login Please</span>
-            </BackgroundLink>
-          )}
+          <img src={require("../asset/images/mypage.png")} />
+          <BackgroundLink>
+            <span onClick={() => navigate("/petlist")}>My Page</span>
+          </BackgroundLink>
         </div>
         <Hexagon />
       </BackgroundIcons>

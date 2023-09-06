@@ -1,94 +1,101 @@
 import React, { useState } from "react";
-import styles from "../components/loginform.module.css";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { API } from "../config";
+import styled from "styled-components";
+import KakaoModule from "../components/KakaoModule";
 
-function Login() {
-  const navigate = useNavigate();
-  function kakaoLogin() {
-    window.Kakao.Auth.login({
-      scope: "profile_nickname, profile_image, account_email",
-      success: function (authObj) {
-        console.log(authObj);
-        window.Kakao.API.request({
-          url: "/v2/user/me",
-          success: (res) => {
-            const kakao_account = res.kakao_account;
-            console.log(kakao_account);
-            navigate("/main");
-          },
-        });
-      },
-      fail: function (error) {
-        console.log(error);
-      },
-    });
+const LoginForm = styled.form`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  width: 30%;
+
+  @media (max-width: 800px) {
+    width: 80%;
   }
+`;
 
-  const [user, setUser] = useState({ username: "", password: "" });
-  const [loginState, setLoginState] = useState(0);
+const FormInputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+  gap: 30px;
+  font-size: 30px;
 
+  & > input {
+    all: unset;
+    padding: 20px 10px;
+    border-bottom: 3px solid white;
+    &::placeholder {
+      color: white;
+    }
+  }
+`;
+
+const FormLabel = styled.label`
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 100px;
+  font-weight: bold;
+`;
+
+const FormButton = styled.button`
+  all: unset;
+  padding: 20px 0;
+  background: #cd9d71;
+  text-align: center;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  text-transform: uppercase;
+  margin: 40px 0;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+
+const FormHelp = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > span {
+    cursor: pointer;
+  }
+`;
+
+export default function Login() {
+  const [user, setUser] = useState({ userId: "", password: "" });
+  const navigate = useNavigate();
   return (
-    <div className={styles.mainWrap}>
-      <img
-        src={require("../asset/images/background_signup.png")}
-        className={styles.mainImg}
-      />
-      {/* 로그인 컴포넌트를 직접 작성 */}
-      <form className={styles.loginForm}>
-        {/* 로그인 입력 필드 */}
-        <div className={styles.inputGroup}>
-          <input
-            type="text"
-            placeholder="Username"
-            value={user.username}
-            onChange={(event) => {
-              setUser({ ...user, username: event.target.value });
-            }}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <input
-            type="password"
-            placeholder="Password"
-            value={user.password}
-            onChange={(event) => {
-              setUser({ ...user, password: event.target.value });
-            }}
-          />
-        </div>
-        {/* 로그인 버튼 */}
-        <div className={styles.inputGroup}>
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              axios.get(API.USER_LIST).then((res) => {
-                res.data.forEach((dt) => {
-                  if (
-                    dt.users_id === user.username &&
-                    dt.users_password === user.password
-                  ) {
-                    console.log(user);
-                    localStorage.setItem("jwt", dt.users_id);
-                    navigate("/main");
-                  }
-                  setLoginState(loginState + 1);
-                });
-              });
-            }}
-          >
-            LOGIN
-          </button>
-        </div>
-        {loginState > 0 && (
-          <div>{loginState}회 틀렸습니다. 다시 시도해주세요</div>
-        )}
-        {/* 카카오 로그인 버튼 */}
-        <div className={styles.kakaoLogin} onClick={kakaoLogin}></div>
-      </form>
-    </div>
+    <LoginForm>
+      <FormLabel>user login</FormLabel>
+      <FormInputs>
+        <input
+          placeholder="User ID"
+          value={user.userId}
+          onChange={(event) => {
+            setUser({ ...user, userId: event.target.value });
+          }}
+        />
+        <input
+          placeholder="Password"
+          value={user.password}
+          onChange={(event) => {
+            setUser({ ...user, password: event.target.value });
+          }}
+        />
+      </FormInputs>
+      <FormHelp>
+        <span onClick={() => navigate("/user/help")}>Forgot Password?</span>
+        <span onClick={() => navigate("/user/signup")}>sign up</span>
+      </FormHelp>
+      <FormButton
+        onClick={(event) => {
+          event.preventDefault();
+          console.log(user);
+        }}
+      >
+        login
+      </FormButton>
+      <KakaoModule />
+    </LoginForm>
   );
 }
-
-export default Login;
