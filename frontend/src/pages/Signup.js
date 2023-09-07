@@ -1,82 +1,122 @@
 import React from "react";
-import styles from "../components/signup/signupform.module.css";
 import { useState } from "react";
+import styles from "../components/signup/signupform.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../config";
+import { styled } from "styled-components";
+
+const SignupBox = styled.form`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  width: 30%;
+  font-size: 27px;
+
+  @media (max-width: 800px) {
+    width: 80%;
+    font-size: 20px;
+  }
+`;
+
+const FormInput = styled.input`
+  width: 100%;
+  all: unset;
+  padding: 20px 10px;
+  border-bottom: 3px solid white;
+  &::placeholder {
+    color: white;
+  }
+`;
+
+const FormButton = styled.button`
+  all: unset;
+  padding: 20px 0;
+  background: #cd9d71;
+  text-align: center;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  text-transform: uppercase;
+  margin: 40px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  max-width: 100%;
+  width: 100%;
+`;
+
+const ConfrimPassword = styled.input`
+  width: 100%;
+  all: unset;
+  padding: 20px 10px;
+  &::placeholder {
+    color: white;
+  }
+  border-bottom: ${({ checkPassword }) => (checkPassword ? "white" : "#ff3f3f")}
+    3px solid;
+`;
 
 function Signup() {
   const navigate = useNavigate();
   // 전달 받은 props
 
   const [data, setData] = useState({
+    username: "",
     users_id: "",
-    users_password: "",
     email: "",
     phone: "",
+    password: "",
+    password_check: "",
   });
 
   return (
-    <div className={styles.loginWrap}>
-      {/* 사용자 아이디 입력받는 입력창 */}
-      <input
-        className={styles.loginText}
+    <SignupBox>
+      <FormInput
+        placeholder="Name"
+        value={data.username}
+        onChange={(event) => setData({ ...data, username: event.target.value })}
+        required
+      />
+
+      <FormInput
+        placeholder="Phone_Number"
+        value={data.phone}
+        onChange={(event) => setData({ ...data, phone: event.target.value })}
+      />
+      <FormInput
         placeholder="User ID"
         value={data.users_id}
         onChange={(event) => setData({ ...data, users_id: event.target.value })}
         required
       />
-      {/* 비밀번호 입력받는 입력창 */}
-      <input
+      <FormInput
         type="password"
-        className={styles.loginText}
         placeholder="Password"
         required
+        value={data.password}
+        onChange={(event) => setData({ ...data, password: event.target.value })}
       />
-      {/* 비밀번호 확인 입력받는 입력창 */}
-      <input
+
+      <ConfrimPassword
+        checkPassword={data.password_check === data.password}
         required
         type="password"
-        className={styles.loginText}
         placeholder="Password Check"
-        value={data.users_password}
-        onChange={(event) =>
-          setData({ ...data, users_password: event.target.value })
-        }
+        value={data.password_check}
+        onChange={(event) => setData(event.target.value)}
       />
-      {/* 가운데 약간의 공간을 주기 위한 div */}
-      <div className={styles.marginArea} />
-
-      <input
-        className={styles.loginText}
-        placeholder="Phone_Number"
-        value={data.phone}
-        onChange={(event) => setData({ ...data, phone: event.target.value })}
-      />
-      {/* 인증번호 영역 */}
-      {/* <div className={styles.certifyWrap}>
-    <input className={styles.certifyText} />
-    <a href="#" className={styles.certifyBtn}>
-      certify
-    </a>
-  </div> */}
-      {/* 이메일 입력받는 입력창 */}
-      <input
-        className={styles.loginText}
+      <FormInput
         placeholder="Email"
         value={data.email}
         onChange={(event) => setData({ ...data, email: event.target.value })}
       />
-      {/* Signup 버튼 => 클릭시 props로 전달받은 handleClick 함수 호출함 */}
-      <button
-        className={styles.signupBtn}
+
+      <FormButton
         onClick={(event) => {
           event.preventDefault();
           axios
             .post(API.USER_JOIN, data)
-            .then(() => {
-              console.log("회원가입이 완료되었습니다.");
-              navigate("/");
+            .then((res) => {
+              console.log(res);
             })
             .catch(() =>
               alert("동일한 아이디가 있거나 값을 채워주세요. 다시 설정해주세요")
@@ -84,8 +124,8 @@ function Signup() {
         }}
       >
         Sign up
-      </button>
-    </div>
+      </FormButton>
+    </SignupBox>
   );
 }
 

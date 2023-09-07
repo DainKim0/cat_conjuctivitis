@@ -4,7 +4,7 @@ export const API = {
   //회원가입
   USER_JOIN: `${BASE_URL}/uploader/users/register`,
   //로그인
-  USER_LOGIN: `${BASE_URL}/uploader/users/login`,
+  USER_LOGIN: `/uploader/users/login`,
   //탈퇴
   // USER_LEAVE(id) {
   //   return `${BASE_URL}/uploader/user/${id}/delete-user`;
