@@ -61,7 +61,7 @@ function Main() {
           <img src={require("../asset/images/login.png")} />
           <BackgroundLink>
             <span onClick={() => navigate("/user/login")}>Log In</span>
-            <span onClick={() => navigate("/signup")}>Sign Up</span>
+            <span onClick={() => navigate("/user/signup")}>Sign Up</span>
           </BackgroundLink>
         </div>
         <Hexagon />

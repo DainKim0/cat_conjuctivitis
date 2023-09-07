@@ -2,7 +2,7 @@ const BASE_URL = "https://azfunctions-hanium.azurewebsites.net";
 
 export const API = {
   //회원가입
-  USER_JOIN: `${BASE_URL}/uploader/users/register`,
+  USER_JOIN: `/uploader/users/register`,
   //로그인
   USER_LOGIN: `/uploader/users/login`,
   //탈퇴

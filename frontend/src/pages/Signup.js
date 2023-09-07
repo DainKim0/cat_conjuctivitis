@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
-import styles from "../components/signup/signupform.module.css";
+
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../config";
@@ -55,6 +55,19 @@ const ConfrimPassword = styled.input`
     3px solid;
 `;
 
+const ErrorMessageLists = styled.ul`
+  all: unset;
+  font-size: 16px;
+  color: #ff0a0a;
+  background: white;
+  border-radius: 0 0 10px 10px;
+  padding: 10px;
+
+  & > li {
+    list-style: none;
+  }
+`;
+
 function Signup() {
   const navigate = useNavigate();
   // 전달 받은 props
@@ -68,8 +81,28 @@ function Signup() {
     password_check: "",
   });
 
+  const [porcess, setProcess] = useState(false);
+
+  const [errorMessage, setErrorMessage] = useState({});
+  const checkRef = useRef();
+
   return (
-    <SignupBox>
+    <SignupBox
+      onSubmit={(event) => {
+        event.preventDefault();
+        setErrorMessage({ pending: "잠시만 기댜려주세요" });
+        axios
+          .post(API.USER_JOIN, data)
+          .then(() => {
+            alert("로그인에 성공했습니다. 로그인을 진행해주세요");
+            navigate("/");
+          })
+          .catch((error) => {
+            setProcess(false);
+            setErrorMessage(error.response.data.message);
+          });
+      }}
+    >
       <FormInput
         placeholder="Name"
         value={data.username}
@@ -88,8 +121,10 @@ function Signup() {
         onChange={(event) => setData({ ...data, users_id: event.target.value })}
         required
       />
+
       <FormInput
         type="password"
+        autoComplete="on"
         placeholder="Password"
         required
         value={data.password}
@@ -99,32 +134,33 @@ function Signup() {
       <ConfrimPassword
         checkPassword={data.password_check === data.password}
         required
+        ref={checkRef}
         type="password"
+        autoComplete="on"
         placeholder="Password Check"
         value={data.password_check}
-        onChange={(event) => setData(event.target.value)}
+        onChange={(event) =>
+          setData({ ...data, password_check: event.target.value })
+        }
       />
       <FormInput
+        autoComplete="on"
         placeholder="Email"
         value={data.email}
         onChange={(event) => setData({ ...data, email: event.target.value })}
       />
 
-      <FormButton
-        onClick={(event) => {
-          event.preventDefault();
-          axios
-            .post(API.USER_JOIN, data)
-            .then((res) => {
-              console.log(res);
-            })
-            .catch(() =>
-              alert("동일한 아이디가 있거나 값을 채워주세요. 다시 설정해주세요")
-            );
-        }}
-      >
-        Sign up
-      </FormButton>
+      {Object.keys(errorMessage).length > 0 && (
+        <ErrorMessageLists>
+          {Object.keys(errorMessage).map((type) => (
+            <li>
+              {type} : {errorMessage[type]}
+            </li>
+          ))}
+        </ErrorMessageLists>
+      )}
+
+      <FormButton>Sign up</FormButton>
     </SignupBox>
   );
 }
