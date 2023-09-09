@@ -104,19 +104,48 @@ function Signup() {
       }}
     >
       <FormInput
-        placeholder="Name"
+        placeholder="Name(필수)"
         value={data.username}
         onChange={(event) => setData({ ...data, username: event.target.value })}
         required
       />
 
       <FormInput
-        placeholder="Phone_Number"
+        placeholder="Phone_Number(선택)"
         value={data.phone}
         onChange={(event) => setData({ ...data, phone: event.target.value })}
       />
+      <div
+        onClick={() => {
+          axios
+            .post(API.USER_NUMBER_SEND, {
+              name: "ㄹㄹ",
+              phone: "01062489763",
+            })
+            .then((res) => console.log(res))
+            .catch((error) => console.log(error));
+        }}
+      >
+        인증하기
+      </div>
+
+      <div
+        onClick={() => {
+          axios
+            .post(API.USER_NUMBER_CHECK, {
+              name: "ㄹㄹ",
+              phone: "01062489763",
+              auth: 6804,
+            })
+            .then((res) => console.log(res))
+            .catch((error) => console.log(error));
+        }}
+      >
+        확인하기
+      </div>
+
       <FormInput
-        placeholder="User ID"
+        placeholder="User ID(필수)"
         value={data.users_id}
         onChange={(event) => setData({ ...data, users_id: event.target.value })}
         required
@@ -125,7 +154,7 @@ function Signup() {
       <FormInput
         type="password"
         autoComplete="on"
-        placeholder="Password"
+        placeholder="Password(필수)"
         required
         value={data.password}
         onChange={(event) => setData({ ...data, password: event.target.value })}
@@ -137,7 +166,7 @@ function Signup() {
         ref={checkRef}
         type="password"
         autoComplete="on"
-        placeholder="Password Check"
+        placeholder="Password Check(필수)"
         value={data.password_check}
         onChange={(event) =>
           setData({ ...data, password_check: event.target.value })
@@ -145,7 +174,7 @@ function Signup() {
       />
       <FormInput
         autoComplete="on"
-        placeholder="Email"
+        placeholder="Email(선택)"
         value={data.email}
         onChange={(event) => setData({ ...data, email: event.target.value })}
       />

@@ -5,16 +5,16 @@ export const API = {
   USER_JOIN: `/uploader/users/register`,
   //로그인
   USER_LOGIN: `/uploader/users/login`,
-  //탈퇴
-  // USER_LEAVE(id) {
-  //   return `${BASE_URL}/uploader/user/${id}/delete-user`;
-  // },
-  // //수정
-  // USER_UPDATE: `${BASE_URL}/user/<str:users_id>/update-user`,
-  // //회원목록
-  // USER_LIST: `${BASE_URL}/uploader/user`,
-  // //회원정보
-  // USER_INFO: `${BASE_URL}/uploader/user/<str:users_id>/list-user`,
+  //전화번호 인증 (인증번호 보내기)
+  USER_NUMBER_SEND: `/uploader/users/auth`,
+  //전화번호 인증 (인증번호 확인하기)
+  USER_NUMBER_CHECK: `/uploader/users/auth/check`,
+  //비밀번호 찾기
+  PASSWORD_SERARCH: `
+
+  /uploader/users/password-lost`,
+  //전화번호 인증 (인증번호 확인하기)
+  USER_NUMBER_CHECK: `/uploader/users/auth/check`,
 
   // //진단 생성
   // DIAGNOSIS_CREATE: `${BASE_URL}/uploader/diagnosis/image-upload`,

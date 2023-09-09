@@ -66,7 +66,7 @@ const FormHelp = styled.div`
   }
 `;
 
-const AlertText = styled.div`
+const ErrorMessageLists = styled.div`
   color: #ff1300;
   background: white;
   padding: 10px;
@@ -92,9 +92,9 @@ const PasswordInput = styled.div`
 export default function Login() {
   const [user, setUser] = useState({ users_id: "", password: "" });
   const navigate = useNavigate();
-  const [loginState, setLoginState] = useState({});
+  const [errorMessage, setErrorMessage] = useState({});
   const [passwordState, setPasswordState] = useState(false);
-  console.log(loginState);
+  console.log(errorMessage);
   return (
     <LoginForm>
       <FormLabel>user login</FormLabel>
@@ -135,20 +135,28 @@ export default function Login() {
         <span onClick={() => navigate("/user/signup")}>sign up</span>
       </FormHelp>
 
-      {loginState.password && <AlertText>{loginState.password[0]}</AlertText>}
-      {loginState.error && <AlertText>{loginState.error[0]}</AlertText>}
+      {Object.keys(errorMessage).length > 0 && (
+        <ErrorMessageLists>
+          {Object.keys(errorMessage).map((type) => (
+            <li>
+              {type} : {errorMessage[type]}
+            </li>
+          ))}
+        </ErrorMessageLists>
+      )}
 
       <FormButton
         onClick={(event) => {
           event.preventDefault();
+          setErrorMessage("로그인중");
           axios
             .post(API.USER_LOGIN, user)
             .then((res) => {
-              setLoginState("");
+              setErrorMessage("");
               localStorage.setItem("jwt", res.data.result.access_token);
               navigate(-1);
             })
-            .catch((err) => setLoginState(err.response.data.message));
+            .catch((err) => setErrorMessage(err.response.data.message));
         }}
       >
         login
