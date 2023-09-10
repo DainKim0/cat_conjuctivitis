@@ -7,13 +7,14 @@ import Main from "./pages/Main";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import DiagnosisHistory from "./pages/DiagnosisHistory";
-import PetAddForm from "./pages/PetAddForm";
+import PetCreate from "./pages/PetCreate";
 import PetList from "./pages/PetList";
 import PrivateRoute from "./PrivateRoute";
 import LoginBackground from "./components/login/LoginBackground";
 import FindPassword from "./pages/FindPassword";
 import FindId from "./pages/FindId";
 import PublicRoute from "./PublicRoute";
+import KakaoLogin from "./components/login/KakaoLogin";
 
 export default function App() {
   return (
@@ -25,7 +26,7 @@ export default function App() {
           <Route path="/result" element={<Result />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/diagnosishistory" element={<DiagnosisHistory />} />
-          <Route path="/petaddform" element={<PetAddForm />} />
+          <Route path="/petcreate" element={<PetCreate />} />
           <Route path="/petlist" element={<PetList />} />
         </Route>
         <Route element={<PublicRoute />}>
@@ -35,7 +36,7 @@ export default function App() {
             <Route path="/user/help/password" element={<FindPassword />} />
             <Route path="/user/help/id" element={<FindId />} />
           </Route>
-          <Route path="/user/kakaologin" element={<Login />} />
+          <Route path="/user/kakaologin" element={<KakaoLogin />} />
         </Route>
       </Routes>
     </BrowserRouter>

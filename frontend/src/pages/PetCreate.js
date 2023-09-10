@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import InspectHeader from "../components/InspectHeader";
-import { Link, json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../config";
@@ -13,7 +12,7 @@ const CreatePetBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 140px);
+    min-height: calc(100vh - 150px);
     width: 100%;
     flex-wrap: wrap;
     gap: 10%;
@@ -23,10 +22,10 @@ const CreatePetBox = styled.div`
 const FormInputBox = styled.div``;
 
 const textLabels = {
-  name: "이름",
-  age: "나이",
-  gender: "성별",
-  remark: "비고",
+  petname: "이름",
+  petage: "나이",
+  petgender: "성별",
+  petcomment: "비고",
 };
 
 const Button = styled.button`
@@ -57,94 +56,103 @@ const InputWrapper = styled.div`
   }
 `;
 
-function DiagnosisForm() {
+function PetCreate() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [remark, setRemark] = useState("");
-  const [state, setState] = useState("INPUT");
+  const [errorMessage, setErrorMessage] = useState("INPUT");
+  const [petData, setPetDat] = useState({
+    petname: "",
+    petage: "",
+    petgender: "",
+    petcomment: "",
+  });
 
   return (
     <CreatePetBox>
       <InspectHeader text="마이 펫 추가하기" />
       <main>
         <img src={require("../asset/images/createPetImg.png")} />
-        <form>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            axios
+              .post(API.PET_CREATE, petData, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                },
+              })
+              .then(() => {
+                setErrorMessage("SUCESS");
+                navigate("/petlist");
+              })
+              .catch((err) => {
+                console.log(err);
+                setErrorMessage("ERROR");
+              });
+          }}
+        >
           <FormInputBox>
             <InputWrapper>
-              <label>{textLabels.name}:</label>
+              <label>{textLabels.petname}:</label>
               <input
                 type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                value={petData.petname}
+                onChange={(event) =>
+                  setPetDat({ ...petData, petname: event.target.value })
+                }
                 autoFocus
                 placeholder={PETCREATEPLACEHOLDER.NAME}
                 required
               />
             </InputWrapper>
             <InputWrapper>
-              <label>{textLabels.age}:</label>
+              <label>{textLabels.petage}:</label>
               <input
                 type="text"
-                value={age}
                 required
-                onChange={(event) => setAge(event.target.value)}
+                value={petData.petage}
+                onChange={(event) =>
+                  setPetDat({ ...petData, petage: event.target.value })
+                }
                 placeholder={PETCREATEPLACEHOLDER.AGE}
               />
             </InputWrapper>
             <InputWrapper>
               <label htmlFor="gender">Gender:</label>
               <select
-                name="gender"
-                onChange={(event) => setGender(event.target.value)}
-                value={gender}
-                placeholder={PETCREATEPLACEHOLDER.GENDER}
                 required
+                name="gender"
+                value={petData.petgender}
+                onChange={(event) =>
+                  setPetDat({ ...petData, petgender: event.target.value })
+                }
               >
-                {GENDEROPTIONS.map(({ VALUE, NAME }) => (
-                  <option name={NAME} key={NAME}>
-                    {VALUE}
+                {GENDEROPTIONS.map(({ VALUE, NAME, SELECTED }) => (
+                  <option name={VALUE} key={VALUE} defaultValue={SELECTED}>
+                    {NAME}
                   </option>
                 ))}
               </select>
             </InputWrapper>
             <InputWrapper>
-              <label>{textLabels.remark}:</label>
+              <label>{textLabels.petcomment}:</label>
               <input
                 required
                 type="text"
-                value={remark}
+                value={petData.petcomment}
+                onChange={(event) =>
+                  setPetDat({ ...petData, petcomment: event.target.value })
+                }
                 placeholder={PETCREATEPLACEHOLDER.REMARK}
-                onChange={(event) => setRemark(event.target.value)}
               />
             </InputWrapper>
           </FormInputBox>
-          <div>{STATETEXT[state]}</div>
+          <div>{STATETEXT[errorMessage]}</div>
 
-          <Button
-            type="submit"
-            onClick={(event) => {
-              event.preventDefault();
-              axios
-                .post(API.PET_CREATE, {
-                  users_id: localStorage.getItem("jwt"), //아이디 저장
-                  petname: name,
-                  petage: age,
-                  petgender: gender,
-                  petcomment: remark,
-                  status: "p",
-                })
-                .then(() => setState("SUCESS"))
-                .catch(() => setState("ERROR"));
-            }}
-          >
-            저장하기
-          </Button>
+          <Button>저장하기</Button>
         </form>
       </main>
     </CreatePetBox>
   );
 }
 
-export default DiagnosisForm;
+export default PetCreate;

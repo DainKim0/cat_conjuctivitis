@@ -66,19 +66,20 @@ const NoticeNoPetData = styled.div`
   font-weight: bold;
 `;
 
-function DiagnosisForm() {
+function PetList() {
   const navigate = useNavigate();
   const [petList, setPetList] = useState([]);
   useEffect(() => {
     axios
-      .get(API.PET_LIST)
-      .then((res) =>
-        setPetList(
-          res.data.filter(
-            ({ users_id }) => localStorage.getItem("jwt") === users_id
-          )
-        )
-      );
+      .get(API.PET_LISTS, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      })
+      .then((res) => {
+        setPetList(res.data.result);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -89,22 +90,24 @@ function DiagnosisForm() {
           <ButtonItem onClick={() => navigate("/DiagnosisHistory")}>
             과거 진단 내역 보러가기
           </ButtonItem>
-          <ButtonItem onClick={() => navigate("/PetAddForm")}>
+          <ButtonItem onClick={() => navigate("/petcreate")}>
             마이 펫 추가하기
           </ButtonItem>
         </ButtonBox>
         <PetItemsBox>
           {petList.length > 0 ? (
             <>
-              {petList.map(({ id, petname, petage, petgender, petcomment }) => (
-                <PetItem
-                  key={id}
-                  name={petname}
-                  age={petage}
-                  gender={petgender}
-                  petcomment={petcomment}
-                />
-              ))}
+              {petList.map(
+                ({ petIdx, petname, petage, petgender, petcomment }) => (
+                  <PetItem
+                    key={petIdx}
+                    name={petname}
+                    age={petage}
+                    gender={petgender}
+                    comment={petcomment}
+                  />
+                )
+              )}
             </>
           ) : (
             <NoticeNoPetData>등록된 펫 정보가 없습니다.</NoticeNoPetData>
@@ -115,4 +118,4 @@ function DiagnosisForm() {
   );
 }
 
-export default DiagnosisForm;
+export default PetList;

@@ -29,6 +29,8 @@ const BackgroundIcons = styled.div`
   }
 
   & > div {
+    font-size: 20px;
+    font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -40,9 +42,8 @@ const BackgroundLink = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 20px;
   gap: 8px;
-  font-weight: bold;
+
   margin-top: 10px;
 
   & > span {
@@ -57,13 +58,19 @@ function Main() {
     <div>
       <BackgroundImage src={require("../asset/mainImg.png")} />
       <BackgroundIcons>
-        <div>
-          <img src={require("../asset/images/login.png")} />
-          <BackgroundLink>
-            <span onClick={() => navigate("/user/login")}>Log In</span>
-            <span onClick={() => navigate("/user/signup")}>Sign Up</span>
-          </BackgroundLink>
-        </div>
+        {localStorage.getItem("jwt") ? (
+          <div onClick={() => localStorage.removeItem("jwt")}>
+            <span>logout</span>
+          </div>
+        ) : (
+          <div>
+            <img src={require("../asset/images/login.png")} />
+            <BackgroundLink>
+              <span onClick={() => navigate("/user/login")}>Log In</span>
+              <span onClick={() => navigate("/user/signup")}>Sign Up</span>
+            </BackgroundLink>
+          </div>
+        )}
         <Hexagon />
       </BackgroundIcons>
       <BackgroundIcons>

@@ -28,7 +28,7 @@ export default function InspectHeader({ text }) {
   const navigate = useNavigate(); // Move the hook inside the functional component
 
   const handleHomeClick = () => {
-    navigate("/Main");
+    navigate("/");
   };
 
   return (

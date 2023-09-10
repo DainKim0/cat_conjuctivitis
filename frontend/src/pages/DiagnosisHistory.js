@@ -67,19 +67,19 @@ const NoticeNoHistoryData = styled.div`
 function DiagnosisHistory() {
   const navigate = useNavigate();
   const [petHistory, setPetHistory] = useState([]);
-
+  console.log(petHistory);
   useEffect(() => {
     axios
-      .get(API.DIAGNOSIS_LIST)
-      .then((res) =>
-        setPetHistory(
-          res.data.filter(
-            ({ users_id }) => localStorage.getItem("jwt") === users_id
-          )
-        )
-      );
+      .get(API.DIAGNOSIS_LISTS, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      })
+      .then((res) => {
+        setPetHistory(res.data.result);
+      })
+      .catch((err) => console.log(err));
   }, []);
-
   return (
     <DiagnosisHistoryBox>
       <InspectHeader text="과거 진단 내역" />
@@ -92,15 +92,25 @@ function DiagnosisHistory() {
         <PastDiagnosisItems>
           {petHistory.length > 0 ? (
             <>
-              {petHistory.map(({ id, pet_name, petresult, diagday, photo }) => (
-                <PastDiagnosisItem
-                  key={id}
-                  name={pet_name}
-                  result={petresult}
-                  diagday={diagday}
-                  photo={photo}
-                />
-              ))}
+              {petHistory.map(
+                ({
+                  petIdx,
+                  petname,
+                  petage,
+                  petresult,
+                  diagday,
+                  petresultper,
+                  photo,
+                }) => (
+                  <PastDiagnosisItem
+                    key={petname}
+                    name={petname}
+                    result={petresult}
+                    diagday={diagday}
+                    photo={photo}
+                  />
+                )
+              )}
             </>
           ) : (
             <NoticeNoHistoryData>

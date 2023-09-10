@@ -7,10 +7,11 @@ const STATETEXT = {
 };
 
 const GENDEROPTIONS = [
-  { VALUE: "수컷", NAME: "male" },
-  { VALUE: "암컷", NAME: "female" },
-  { VALUE: "중성", NAME: "neutrality" },
-  { VALUE: "모름", NAME: "noAnswer" },
+  { VALUE: "", NAME: "==선택==" },
+  { VALUE: "neutrality", NAME: "중성" },
+  { VALUE: "female", NAME: "암컷" },
+  { VALUE: "male", NAME: "수컷" },
+  { VALUE: "noanswer", NAME: "모름" },
 ];
 
 const PETCREATEPLACEHOLDER = {

@@ -52,7 +52,7 @@ const Remark = styled.div`
   }
 `;
 
-export default function PetItem({ name, gender, age, remark }) {
+export default function PetItem({ name, gender, age, comment }) {
   return (
     <PetItemBox>
       <PetImg src={require("../asset/images/bobby.png")} alt="Profile" />
@@ -60,7 +60,7 @@ export default function PetItem({ name, gender, age, remark }) {
         <Name>{name}</Name>
         <Info>Gender: {gender}</Info>
         <Info>Age: {age}</Info>
-        <Remark>Remarks: {remark}</Remark>
+        <Remark>Remarks: {comment}</Remark>
       </PetDescription>
     </PetItemBox>
   );
