@@ -9,9 +9,11 @@ import Login from "./pages/Login";
 import DiagnosisHistory from "./pages/DiagnosisHistory";
 import PetAddForm from "./pages/PetAddForm";
 import PetList from "./pages/PetList";
-import CheckLogin from "./components/CheckLogin";
-import LoginBackground from "./components/LoginBackground";
+import PrivateRoute from "./PrivateRoute";
+import LoginBackground from "./components/login/LoginBackground";
 import FindPassword from "./pages/FindPassword";
+import FindId from "./pages/FindId";
+import PublicRoute from "./PublicRoute";
 
 export default function App() {
   return (
@@ -19,19 +21,22 @@ export default function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route element={<CheckLogin />}>
+        <Route element={<PrivateRoute />}>
           <Route path="/result" element={<Result />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/diagnosishistory" element={<DiagnosisHistory />} />
           <Route path="/petaddform" element={<PetAddForm />} />
           <Route path="/petlist" element={<PetList />} />
         </Route>
-        <Route element={<LoginBackground />}>
-          <Route path="/user/login" element={<Login />} />
-          <Route path="/user/signup" element={<Signup />} />
-          <Route path="/user/help" element={<FindPassword />} />
+        <Route element={<PublicRoute />}>
+          <Route element={<LoginBackground />}>
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/user/signup" element={<Signup />} />
+            <Route path="/user/help/password" element={<FindPassword />} />
+            <Route path="/user/help/id" element={<FindId />} />
+          </Route>
+          <Route path="/user/kakaologin" element={<Login />} />
         </Route>
-        <Route path="/user/kakaologin" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
