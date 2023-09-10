@@ -1,6 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import styled from "styled-components";
+import { API } from "../config";
+import ShowErrorMessage from "../components/login/ShowErrorMessage";
+import { NavLink } from "react-router-dom";
 
 const FindPasswordBox = styled.form`
   position: relative;
@@ -14,20 +17,25 @@ const FindPasswordBox = styled.form`
   }
 `;
 
-const FormInputs = styled.div`
+const FormInputsBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
-  gap: 30px;
   font-size: 30px;
+  border: 1px solid;
+  border-radius: 14px;
+  border-bottom: 3px solid white;
 
   & > input {
     all: unset;
     padding: 20px 10px;
-    border-bottom: 3px solid white;
+
     &::placeholder {
       color: white;
     }
+  }
+
+  & > input:not(:last-child) {
+    border-bottom: 3px solid white;
   }
 `;
 
@@ -43,20 +51,78 @@ const FormButton = styled.button`
   cursor: pointer;
 `;
 
-export default function FindPassword() {
-  const [userInfo, setUserInfo] = useState({
-    username: "",
-    phone: "",
+const NewPasswordBox = function ({ token }) {
+  const [newPassword, setNewPassword] = useState({
+    password: "",
+    password_check: "",
   });
-  const [send, setSend] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({});
+  const [sucess, setSucess] = useState("");
   return (
-    <FindPasswordBox>
-      <FormInputs>
+    <>
+      {sucess ? (
+        <>
+          비밀번호가 성공적으로 변경되었습니다.
+          <NavLink href="/user/login">로그인하러가기</NavLink>
+        </>
+      ) : (
+        <>
+          <FormInputsBox>
+            <input
+              placeholder="New_password"
+              value={newPassword.password}
+              onChange={(event) => {
+                setNewPassword({
+                  ...newPassword,
+                  password: event.target.value,
+                });
+              }}
+            />
+            <input
+              placeholder="password_check"
+              value={newPassword.password_check}
+              onChange={(event) => {
+                setNewPassword({
+                  ...newPassword,
+                  password_check: event.target.value,
+                });
+              }}
+            />
+          </FormInputsBox>
+          <ShowErrorMessage errorMessage={errorMessage} />
+          <FormButton
+            onClick={(event) => {
+              event.preventDefault();
+              axios
+                .post(API.PASSWORD_CHECK_CODE, newPassword, {
+                  headers: { authorization: token },
+                })
+                .then(() => {
+                  setSucess(true);
+                })
+                .catch((err) => setErrorMessage(err.response.data.message));
+            }}
+          >
+            certify
+          </FormButton>
+        </>
+      )}
+    </>
+  );
+};
+
+const UserCertify = function ({ userInfo, setUserInfo, setToken }) {
+  const [send, setSend] = useState(false);
+  const [certifyNumber, setCertifyNumber] = useState();
+  const [errorMessage, setErrorMessage] = useState({});
+  return (
+    <>
+      <FormInputsBox>
         <input
-          placeholder="Name"
-          value={userInfo.username}
+          placeholder="Users_id"
+          value={userInfo.users_id}
           onChange={(event) => {
-            setUserInfo({ ...userInfo, username: event.target.value });
+            setUserInfo({ ...userInfo, users_id: event.target.value });
           }}
         />
         <input
@@ -66,15 +132,71 @@ export default function FindPassword() {
             setUserInfo({ ...userInfo, phone: event.target.value });
           }}
         />
+        {send && (
+          <input
+            placeholder="Auth_Number"
+            value={certifyNumber}
+            onChange={(event) => setCertifyNumber(event.target.value)}
+          />
+        )}
+
+        <ShowErrorMessage errorMessage={errorMessage} />
+      </FormInputsBox>
+      {send ? (
         <FormButton
           onClick={(event) => {
             event.preventDefault();
-            // axios.post();
+            axios
+              .post(API.PASSWORD_CHECK_CODE, {
+                ...userInfo,
+                auth: certifyNumber,
+              })
+              .then((res) => {
+                setToken(res.data.result.access_token);
+              })
+              .catch((err) => setErrorMessage(err.response.data.message));
+          }}
+        >
+          certify
+        </FormButton>
+      ) : (
+        <FormButton
+          onClick={(event) => {
+            event.preventDefault();
+            axios
+              .post(API.PASSWORD_SEND_CODE, { ...userInfo })
+              .then(() => {
+                setErrorMessage({ input: "인증번호를 입력해주세요" });
+                setSend(true);
+              })
+              .catch((err) => setErrorMessage(err.response.data.message));
           }}
         >
           send
         </FormButton>
-      </FormInputs>
+      )}
+    </>
+  );
+};
+
+export default function FindPassword() {
+  const [userInfo, setUserInfo] = useState({
+    users_id: "",
+    phone: "",
+  });
+
+  const [token, setToken] = useState("");
+  return (
+    <FindPasswordBox>
+      {token ? (
+        <NewPasswordBox token={token} />
+      ) : (
+        <UserCertify
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          setToken={setToken}
+        />
+      )}
     </FindPasswordBox>
   );
 }

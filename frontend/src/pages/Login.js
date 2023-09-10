@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import KakaoModule from "../components/KakaoModule";
+import KakaoModule from "../components/login/KakaoModule";
 import axios from "axios";
 import { API } from "../config";
 import { ReactComponent as OpenEye } from "../asset/icons/OpenEye.svg";
 import { ReactComponent as CloseEye } from "../asset/icons/CloseEye.svg";
+import ShowErrorMessage from "../components/login/ShowErrorMessage";
 
 const LoginForm = styled.form`
   position: relative;
@@ -23,8 +24,10 @@ const FormInputs = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
-  gap: 30px;
   font-size: 30px;
+  border: 1px solid;
+  border-radius: 10px;
+  border-bottom: 3px solid white;
 
   & > input {
     all: unset;
@@ -66,20 +69,12 @@ const FormHelp = styled.div`
   }
 `;
 
-const ErrorMessageLists = styled.div`
-  color: #ff1300;
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: bold;
-`;
-
 const PasswordInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 10px;
-  border-bottom: 3px solid white;
+
   & > input {
     all: unset;
     font-size: 30px;
@@ -129,26 +124,20 @@ export default function Login() {
             />
           )}
         </PasswordInput>
+        <ShowErrorMessage errorMessage={errorMessage} />
       </FormInputs>
       <FormHelp>
-        <span onClick={() => navigate("/user/help")}>Forgot Password?</span>
+        <span onClick={() => navigate("/user/help/id")}>Forgot Id?</span>
+        <span onClick={() => navigate("/user/help/password")}>
+          Forgot Password?
+        </span>
         <span onClick={() => navigate("/user/signup")}>sign up</span>
       </FormHelp>
-
-      {Object.keys(errorMessage).length > 0 && (
-        <ErrorMessageLists>
-          {Object.keys(errorMessage).map((type) => (
-            <li>
-              {type} : {errorMessage[type]}
-            </li>
-          ))}
-        </ErrorMessageLists>
-      )}
 
       <FormButton
         onClick={(event) => {
           event.preventDefault();
-          setErrorMessage("로그인중");
+          setErrorMessage({ access: "로그인중" });
           axios
             .post(API.USER_LOGIN, user)
             .then((res) => {
