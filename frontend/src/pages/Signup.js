@@ -94,36 +94,50 @@ const CertifyPhone = function ({
     send: (
       <NavButton
         onClick={() => {
+          setErrorMessage({ pending: "잠시간 기다려주세요" });
           axios
-            .post(API.USER_NUMBER_SEND, {
-              name: phoneData.username,
-              phone: phoneData.phone,
-            })
-            .then((res) => {
+            .post(API.PHONE_CODE_SEND, phoneData)
+            .then(() => {
               setMoveAccess("certify");
-              setErrorMessage({ sucess: res.data.result });
+              setErrorMessage({ sucess: "인증번호를 입력해주세요" });
             })
-            .catch((error) => setErrorMessage(error.response.data.message));
+            .catch((error) => {
+              setErrorMessage(error.response.data.message);
+            });
         }}
       >
         send
       </NavButton>
     ),
     certify: (
-      <NavButton
-        onClick={() => {
-          axios
-            .post(API.USER_NUMBER_CHECK, {
-              name: phoneData.username,
-              phone: phoneData.phone,
-              auth: certifyNumber,
-            })
-            .then(() => setMoveAccess("next"))
-            .catch((error) => setErrorMessage(error.response.data.message));
-        }}
-      >
-        certify
-      </NavButton>
+      <>
+        <NavButton
+          onClick={() => {
+            setErrorMessage({ pending: "잠시만 기다려주세요" });
+            axios
+              .post(API.PHONE_CODE_CHECK, {
+                name: phoneData.name,
+                phone: phoneData.phone,
+                auth: parseInt(certifyNumber),
+              })
+              .then(() => {
+                setErrorMessage({ sucess: "성공적으로 완료되었습니다." });
+                setMoveAccess("next");
+              })
+              .catch((error) => setErrorMessage(error.response.data.message));
+          }}
+        >
+          certify
+        </NavButton>
+        <NavButton
+          onClick={() => {
+            setErrorMessage({});
+            setMoveAccess("send");
+          }}
+        >
+          인증번호 다시 보내기
+        </NavButton>
+      </>
     ),
     next: <FormButton>Next</FormButton>,
   };
@@ -136,14 +150,16 @@ const CertifyPhone = function ({
     >
       <FormInputBox>
         <input
+          readOnly={moveAccess === "next"}
           placeholder="Name(필수)"
-          value={phoneData.username}
+          value={phoneData.name}
           onChange={(event) =>
-            setPhoneData({ ...phoneData, username: event.target.value })
+            setPhoneData({ ...phoneData, name: event.target.value })
           }
           required
         />
         <input
+          readOnly={moveAccess === "next"}
           placeholder="Phone_Number(필수)"
           value={phoneData.phone}
           onChange={(event) =>
@@ -152,7 +168,7 @@ const CertifyPhone = function ({
           required
         />
 
-        {process === "certify" && (
+        {moveAccess === "certify" && (
           <input
             placeholder="인증번호"
             value={certifyNumber}
@@ -178,10 +194,10 @@ function Signup() {
     password_check: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState({ dff: "dffd" });
+  const [errorMessage, setErrorMessage] = useState({});
   const checkRef = useRef();
   const [phoneData, setPhoneData] = useState({
-    username: "",
+    name: "",
     phone: "",
   });
 
@@ -198,14 +214,16 @@ function Signup() {
             axios
               .post(API.USER_JOIN, {
                 ...data,
-                ...phoneData,
+                username: phoneData.name,
+                phone: phoneData.phone,
               })
               .then(() => {
                 alert("회원가입에 성공했습니다. 로그인을 진행해주세요");
                 navigate("/user/login");
               })
               .catch((error) => {
-                setErrorMessage(error.response.data.message);
+                console.log(error);
+                // setErrorMessage(error.response.data.message);
               });
           }}
         >
@@ -242,8 +260,9 @@ function Signup() {
               }
             />
             <input
+              required
               autoComplete="on"
-              placeholder="Email(선택)"
+              placeholder="Email(필수)"
               value={data.email}
               onChange={(event) =>
                 setData({ ...data, email: event.target.value })

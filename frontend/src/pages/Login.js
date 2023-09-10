@@ -89,7 +89,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState({});
   const [passwordState, setPasswordState] = useState(false);
-  console.log(errorMessage);
+
   return (
     <LoginForm>
       <FormLabel>user login</FormLabel>
@@ -143,7 +143,7 @@ export default function Login() {
             .then((res) => {
               setErrorMessage("");
               localStorage.setItem("jwt", res.data.result.access_token);
-              navigate(-1);
+              navigate("/");
             })
             .catch((err) => setErrorMessage(err.response.data.message));
         }}

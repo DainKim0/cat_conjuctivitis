@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { API } from "../config";
 import ShowErrorMessage from "../components/login/ShowErrorMessage";
+import { useNavigate } from "react-router-dom";
 
 const FinIddBox = styled.form`
   position: relative;
@@ -49,21 +50,60 @@ const FormButton = styled.button`
   cursor: pointer;
 `;
 
+const ShowResult = styled.div`
+  position: relative;
+  width: 80%;
+  background: #ffffff5e;
+  height: 50%;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-weight: bold;
+`;
+const ResultId = styled.div`
+  font-size: 24px;
+`;
+const NavButton = styled.div`
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+  cursor: pointer;
+
+  & > span:hover {
+    color: blue;
+  }
+`;
+
 export default function FinId() {
   const [data, setUserInfo] = useState({
     name: "",
     phone: "",
   });
   const [send, setSend] = useState(false);
-  const [certifyNumber, setCertifyNumber] = useState();
+  const [certifyNumber, setCertifyNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState({});
-  const [sucess, setSucess] = useState("");
+  const [sucess, setSucess] = useState();
+  const navigate = useNavigate();
   return (
-    <FinIddBox>
+    <>
       {sucess ? (
-        <>아이디는 {sucess.result.users_id}입니다</>
+        <ShowResult>
+          <ResultId>아이디는 {sucess.result.users_id}입니다</ResultId>
+          <NavButton>
+            <span onClick={() => navigate("/user/login")}>로그인</span>
+            <span onClick={() => navigate("/user/help/password")}>
+              비밀번호 찾기
+            </span>
+            <span onClick={() => navigate("/user/signup")}>회원가입</span>
+          </NavButton>
+        </ShowResult>
       ) : (
-        <>
+        <FinIddBox>
           <FormInputs>
             <input
               placeholder="Name"
@@ -93,16 +133,19 @@ export default function FinId() {
               onClick={(event) => {
                 event.preventDefault();
                 axios
-                  .post(API.PASSWORD_CHECK_CODE, {
+                  .post(API.USERID_CHECK_CODE, {
                     ...data,
-                    auth: certifyNumber,
+                    auth: parseInt(certifyNumber),
                   })
                   .then((res) => {
                     console.log(res);
                     setSucess(res.data);
                     setSend(true);
                   })
-                  .catch((err) => setErrorMessage(err.response.data.message));
+                  .catch((err) => {
+                    console.log(err);
+                    setErrorMessage(err.response.data.message);
+                  });
               }}
             >
               certify
@@ -127,8 +170,8 @@ export default function FinId() {
               send
             </FormButton>
           )}
-        </>
+        </FinIddBox>
       )}
-    </FinIddBox>
+    </>
   );
 }

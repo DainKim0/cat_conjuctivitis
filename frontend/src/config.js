@@ -2,13 +2,13 @@ const BASE_URL = "https://azfunctions-hanium.azurewebsites.net";
 
 export const API = {
   //회원가입
-  USER_JOIN: `/uploader/users/register`,
+  USER_JOIN: "/uploader/users/register",
   //로그인
   USER_LOGIN: `/uploader/users/login`,
   //전화번호 인증 (인증번호 보내기)
-  USER_CODE_SEND: `/uploader/users/auth`,
+  PHONE_CODE_SEND: `/uploader/users/auth`,
   //전화번호 인증 (인증번호 확인하기)
-  USER_CODE_CHECK: `/uploader/users/auth/check`,
+  PHONE_CODE_CHECK: `/uploader/users/auth/check`,
   //비밀번호 찾기(인증번호 보내기)
   PASSWORD_SEND_CODE: `/uploader/users/password-lost`,
   //비밀번호 찾기(인증번호 확인하기)

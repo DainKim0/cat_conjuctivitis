@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { API } from "../config";
 import ShowErrorMessage from "../components/login/ShowErrorMessage";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const FindPasswordBox = styled.form`
   position: relative;
@@ -51,24 +51,52 @@ const FormButton = styled.button`
   cursor: pointer;
 `;
 
+const ShowResult = styled.div`
+  position: relative;
+  background: #ffffff5e;
+  height: 400px;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 30px;
+  font-weight: bold;
+  padding: 0 20px;
+
+  & > span {
+    font-size: 20px;
+  }
+`;
+
+const NavButton = styled.span`
+  cursor: pointer;
+`;
+
 const NewPasswordBox = function ({ token }) {
   const [newPassword, setNewPassword] = useState({
     password: "",
     password_check: "",
   });
   const [errorMessage, setErrorMessage] = useState({});
-  const [sucess, setSucess] = useState("");
+  const [sucess, setSucess] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       {sucess ? (
-        <>
-          비밀번호가 성공적으로 변경되었습니다.
-          <NavLink href="/user/login">로그인하러가기</NavLink>
-        </>
+        <ShowResult>
+          <span>비밀번호가 성공적으로 변경되었습니다.</span>
+          <NavButton onClick={() => navigate("/user/login")}>
+            로그인하기
+          </NavButton>
+        </ShowResult>
       ) : (
         <>
           <FormInputsBox>
             <input
+              type="password"
               placeholder="New_password"
               value={newPassword.password}
               onChange={(event) => {
@@ -79,6 +107,7 @@ const NewPasswordBox = function ({ token }) {
               }}
             />
             <input
+              type="password"
               placeholder="password_check"
               value={newPassword.password_check}
               onChange={(event) => {
@@ -92,15 +121,25 @@ const NewPasswordBox = function ({ token }) {
           <ShowErrorMessage errorMessage={errorMessage} />
           <FormButton
             onClick={(event) => {
+              setErrorMessage({ pending: "비밀번호를 변경중입니다" });
               event.preventDefault();
               axios
-                .post(API.PASSWORD_CHECK_CODE, newPassword, {
-                  headers: { authorization: token },
+                .post(API.PASSWORD_RESET, newPassword, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
                 })
-                .then(() => {
+                .then((res) => {
+                  console.log(res);
+                  setErrorMessage({
+                    pending: "비밀번호 변경이 완료되었습니다.",
+                  });
                   setSucess(true);
                 })
-                .catch((err) => setErrorMessage(err.response.data.message));
+                .catch((err) => {
+                  console.log(err);
+                  setErrorMessage(err.response.data.message);
+                });
             }}
           >
             certify
@@ -113,7 +152,7 @@ const NewPasswordBox = function ({ token }) {
 
 const UserCertify = function ({ userInfo, setUserInfo, setToken }) {
   const [send, setSend] = useState(false);
-  const [certifyNumber, setCertifyNumber] = useState();
+  const [certifyNumber, setCertifyNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState({});
   return (
     <>
@@ -145,13 +184,15 @@ const UserCertify = function ({ userInfo, setUserInfo, setToken }) {
       {send ? (
         <FormButton
           onClick={(event) => {
+            setErrorMessage({ pending: "인증번호를 확인중입니다" });
             event.preventDefault();
             axios
               .post(API.PASSWORD_CHECK_CODE, {
                 ...userInfo,
-                auth: certifyNumber,
+                auth: parseInt(certifyNumber),
               })
               .then((res) => {
+                console.log(res.data);
                 setToken(res.data.result.access_token);
               })
               .catch((err) => setErrorMessage(err.response.data.message));
@@ -162,6 +203,7 @@ const UserCertify = function ({ userInfo, setUserInfo, setToken }) {
       ) : (
         <FormButton
           onClick={(event) => {
+            setErrorMessage({ pending: "인증번호를 전송중입니다" });
             event.preventDefault();
             axios
               .post(API.PASSWORD_SEND_CODE, { ...userInfo })
