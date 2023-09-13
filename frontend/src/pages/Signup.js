@@ -223,7 +223,7 @@ function Signup() {
               })
               .catch((error) => {
                 console.log(error);
-                // setErrorMessage(error.response.data.message);
+                setErrorMessage(error.response.data.message);
               });
           }}
         >

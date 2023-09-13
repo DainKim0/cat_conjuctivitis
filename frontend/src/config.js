@@ -1,5 +1,3 @@
-const BASE_URL = "https://azfunctions-hanium.azurewebsites.net";
-
 export const API = {
   //회원가입
   USER_JOIN: "/uploader/users/register",

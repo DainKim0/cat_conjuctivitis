@@ -5,6 +5,6 @@ export default function PrivateRoute() {
   return localStorage.getItem("jwt") ? (
     <Outlet />
   ) : (
-    <Navigate to="/user/login" />
+    <Navigate to="/user/login" replace={true} />
   );
 }

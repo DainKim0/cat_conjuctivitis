@@ -51,6 +51,10 @@ const BackgroundLink = styled.div`
   }
 `;
 
+const Logout = styled.div`
+  cursor: pointer;
+`;
+
 function Main() {
   const navigate = useNavigate();
 
@@ -59,9 +63,14 @@ function Main() {
       <BackgroundImage src={require("../asset/mainImg.png")} />
       <BackgroundIcons>
         {localStorage.getItem("jwt") ? (
-          <div onClick={() => localStorage.removeItem("jwt")}>
+          <Logout
+            onClick={() => {
+              localStorage.removeItem("jwt");
+              window.location.replace("/");
+            }}
+          >
             <span>logout</span>
-          </div>
+          </Logout>
         ) : (
           <div>
             <img src={require("../asset/images/login.png")} />

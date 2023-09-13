@@ -4,6 +4,8 @@ import { ReactComponent as ImageIcon } from "../asset/icons/ImageIcon.svg";
 import InspectHeader from "../components/InspectHeader";
 import { useNavigate } from "react-router-dom";
 import DragDrop from "../components/DragDrop";
+import axios from "axios";
+import { API } from "../config";
 
 const UploadBox = styled.div`
   background: #faf5f1;
@@ -127,6 +129,24 @@ export default function Upload() {
             </ProcessButton>
           </UploadCotainer>
         )}
+        <div
+          onClick={() => {
+            axios
+              .post(
+                API.DIAGNOSIS_IMAGE_UPLOAD,
+                { FormData: "d" },
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+                  },
+                }
+              )
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err));
+          }}
+        >
+          이미지 업로드
+        </div>
       </UploadMain>
     </UploadBox>
   );
