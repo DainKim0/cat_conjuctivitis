@@ -129,7 +129,7 @@ export default function Upload() {
             </ProcessButton>
           </UploadCotainer>
         )}
-        <div
+        {/* <div
           onClick={() => {
             axios
               .post(
@@ -146,7 +146,7 @@ export default function Upload() {
           }}
         >
           이미지 업로드
-        </div>
+        </div> */}
       </UploadMain>
     </UploadBox>
   );
