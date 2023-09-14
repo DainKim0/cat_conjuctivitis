@@ -76,6 +76,7 @@ function DiagnosisHistory() {
         },
       })
       .then((res) => {
+        console.log(res);
         setPetHistory(res.data.result);
       })
       .catch((err) => console.log(err));

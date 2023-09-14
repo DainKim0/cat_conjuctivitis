@@ -69,6 +69,7 @@ const NoticeNoPetData = styled.div`
 function PetList() {
   const navigate = useNavigate();
   const [petList, setPetList] = useState([]);
+
   useEffect(() => {
     axios
       .get(API.PET_LISTS, {
@@ -78,8 +79,34 @@ function PetList() {
       })
       .then((res) => {
         setPetList(res.data.result);
-      })
-      .catch((err) => console.log(err));
+      });
+    // .catch((err) => console.log(err));
+
+    axios.interceptors.response.use(
+      (res) => res,
+      async (error) => {
+        const {
+          config,
+          response: { data },
+        } = error;
+
+        if (data.code !== 401) {
+          return Promise.reject(error);
+        }
+
+        if (data.code === 401) {
+          localStorage.removeItem("jwt");
+          const refresh = localStorage.getItem("refresh_jwt");
+          if (refresh) {
+            localStorage.setItem("jwt");
+            localStorage.removeItem("refresh_jwt");
+          }
+          navigate("/user/login");
+        }
+
+        return axios(config);
+      }
+    );
   }, []);
 
   return (

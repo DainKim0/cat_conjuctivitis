@@ -143,6 +143,10 @@ export default function Login() {
             .then((res) => {
               setErrorMessage("");
               localStorage.setItem("jwt", res.data.result.access_token);
+              localStorage.setItem(
+                "refresh_jwt",
+                res.data.result.refresh_token
+              );
               navigate("/");
             })
             .catch((err) => setErrorMessage(err.response.data.message));

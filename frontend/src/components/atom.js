@@ -1,8 +1,6 @@
 import { atom } from "recoil";
 
-const userState = atom({
+export const userState = atom({
   key: "userState",
-  default: "",
+  default: localStorage.getItem("jwt"),
 });
-
-module.exports = { userState };

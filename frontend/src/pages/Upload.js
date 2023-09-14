@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { ReactComponent as ImageIcon } from "../asset/icons/ImageIcon.svg";
+import { ReactComponent as Close } from "../asset/icons/Close.svg";
 import InspectHeader from "../components/InspectHeader";
 import { useNavigate } from "react-router-dom";
 import DragDrop from "../components/DragDrop";
 import axios from "axios";
 import { API } from "../config";
+import { useRecoilState } from "recoil";
+import { userState } from "../components/atom.js";
 
 const UploadBox = styled.div`
   background: #faf5f1;
@@ -68,6 +70,9 @@ const ProcessList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
+  max-height calc(100vh - 400px);
+  overflow-y: auto;
+}
 `;
 
 const ProcessItem = styled.li`
@@ -75,7 +80,7 @@ const ProcessItem = styled.li`
   gap: 30px;
   align-items: center;
   border-bottom: 4px solid #ebe0d5;
-  padding: 25px 0;
+  padding: 25px 20px;
 `;
 
 const ProcessButton = styled.div`
@@ -87,66 +92,89 @@ const ProcessButton = styled.div`
   color: rgba(0, 0, 0, 0.51);
 `;
 
+const ProcessImage = styled.img`
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+`;
+
+const ProcessRemove = styled.div`
+  align-self: baseline;
+  cursor: pointer;
+`;
+
+const ProcessItemBox = ({ file, setFiles }) => {
+  const [imageurl, setImageUrl] = useState();
+  const { id, object: fileData } = file;
+  const reader = new FileReader();
+  reader.readAsDataURL(fileData);
+
+  reader.onload = () => {
+    setImageUrl(reader.result);
+  };
+  return (
+    <ProcessItem key={id}>
+      <ProcessImage src={imageurl} />
+      <ProcessInfo>
+        <div>{fileData.name}</div>
+        <ProcessBar></ProcessBar>
+        <ProcessText>100% done</ProcessText>
+      </ProcessInfo>
+      <ProcessRemove
+        onClick={() => setFiles((cur) => cur.filter((f) => f !== file))}
+      >
+        <Close />
+      </ProcessRemove>
+    </ProcessItem>
+  );
+};
+
 export default function Upload() {
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
+  const [user, setUser] = useRecoilState(userState);
 
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
   return (
     <UploadBox>
       <InspectHeader text="Image Upload" />
       <UploadMain>
         <UploadCotainer files={!files.length}>
+          <div>
+            <span>펫을 선택해주세요</span>
+            <select>
+              <option></option>
+            </select>
+          </div>
           <DragDrop files={files} setFiles={setFiles} />
-          <ImageButton>Image Upload</ImageButton>
         </UploadCotainer>
         {files.length > 0 && (
           <UploadCotainer files={!files.length}>
             <ProcessList>
-              {files.map((file) => {
-                const {
-                  id,
-                  object: { name },
-                } = file;
-                return (
-                  <ProcessItem key={id}>
-                    <ImageIcon width="60px" height="60px" />
-                    <ProcessInfo>
-                      <div>{name}</div>
-                      <ProcessBar></ProcessBar>
-                      <ProcessText>
-                        <div>100% done</div>
-                      </ProcessText>
-                    </ProcessInfo>
-                  </ProcessItem>
-                );
-              })}
+              {files.map((file) => (
+                <ProcessItemBox file={file} setFiles={setFiles} />
+              ))}
             </ProcessList>
-            <ProcessButton onClick={() => navigate("/result")}>
+            <ProcessButton
+              onClick={() => {
+                const formData = new FormData();
+                formData.append("petIdx", 4);
+                files.map((f) => formData.append("photo", f.object));
+                files.map((f) => console.log(f.object));
+
+                axios
+                  .post(API.DIAGNOSIS_IMAGE_UPLOAD, formData, {
+                    headers: {
+                      Authorization: `Bearer ${user}`,
+                      "Content-Type": "multipart/form-data", // 이것 필수
+                    },
+                  })
+                  .then((res) => console.log(res));
+              }}
+            >
               AI 진단 시작
             </ProcessButton>
           </UploadCotainer>
         )}
-        {/* <div
-          onClick={() => {
-            axios
-              .post(
-                API.DIAGNOSIS_IMAGE_UPLOAD,
-                { FormData: "d" },
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-                  },
-                }
-              )
-              .then((res) => console.log(res))
-              .catch((err) => console.log(err));
-          }}
-        >
-          이미지 업로드
-        </div> */}
       </UploadMain>
     </UploadBox>
   );
