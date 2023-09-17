@@ -79,8 +79,8 @@ function PetList() {
       })
       .then((res) => {
         setPetList(res.data.result);
-      });
-    // .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
 
     axios.interceptors.response.use(
       (res) => res,
@@ -93,18 +93,18 @@ function PetList() {
         if (data.code !== 401) {
           return Promise.reject(error);
         }
-
+        config.sent = true;
         if (data.code === 401) {
           localStorage.removeItem("jwt");
           const refresh = localStorage.getItem("refresh_jwt");
           if (refresh) {
-            localStorage.setItem("jwt");
+            localStorage.setItem("jwt", refresh);
             localStorage.removeItem("refresh_jwt");
           }
+          localStorage.removeItem("jwt");
           navigate("/user/login");
+          return Promise.reject(error);
         }
-
-        return axios(config);
       }
     );
   }, []);
