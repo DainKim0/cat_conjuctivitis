@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import KakaoModule from "../components/login/KakaoModule";
 import axios from "axios";
 import { API } from "../config";
 import { ReactComponent as OpenEye } from "../asset/icons/OpenEye.svg";
