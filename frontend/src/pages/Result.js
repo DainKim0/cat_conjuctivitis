@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
 import InspectHeader from "../components/InspectHeader";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ResultBox = styled.div`
   background: #faf5f1;
@@ -97,7 +98,9 @@ export default function Result() {
   const handleFindAnimalHospitals = () => {
     window.location.href = "https://map.naver.com/";
   };
-
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const stateResult = state.petresult === "normal" ? 0 : 100;
   return (
     <ResultBox>
       <InspectHeader text={"AI 진단 결과"} />
@@ -107,24 +110,36 @@ export default function Result() {
         </ResultCotainer>
         <ResultCotainer>
           <ResultInfo>
-            <ResultTitle>결막염</ResultTitle>
+            <ResultTitle>결막염일 확률</ResultTitle>
             <ResultBar>
-              <BarProcess process={50} />
+              <BarProcess process={stateResult} />
             </ResultBar>
-            <ResultText>78%</ResultText>
+            <ResultText>{stateResult}%</ResultText>
           </ResultInfo>
           <ReultDescription>
             <DescriptionTitle>
-              <strong>결막염 진단 확률 78%</strong>입니다.
+              <strong>{stateResult ? "결막염" : "정상"}</strong>
+              입니다.
             </DescriptionTitle>
-            <DescriptionText>
-              근처 동물병원에 신속하게 내원하여 정확한 진단과 치료를 받으시길
-              바랍니다.
-            </DescriptionText>
+            {stateResult ? (
+              <>
+                <DescriptionText>
+                  근처 동물병원에 신속하게 내원하여 정확한 진단과 치료를
+                  받으시길 바랍니다.
+                </DescriptionText>
+                <ResultButton onClick={handleFindAnimalHospitals}>
+                  근처 동물병원 찾기
+                </ResultButton>
+              </>
+            ) : (
+              <>
+                <DescriptionText>안심하셔도 됩니다</DescriptionText>
+                <ResultButton onClick={() => navigate("/")}>
+                  홈으로 돌아가기
+                </ResultButton>
+              </>
+            )}
           </ReultDescription>
-          <ResultButton onClick={handleFindAnimalHospitals}>
-            근처 동물병원 찾기
-          </ResultButton>
         </ResultCotainer>
       </ResultMain>
     </ResultBox>

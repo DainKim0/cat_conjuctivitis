@@ -22,8 +22,15 @@ const UploadBox = styled.div`
 `;
 
 const UploadMain = styled.main`
-  display: flex;
   padding: 40px 0;
+`;
+
+const PetSelectedValue = styled.div`
+  margin-bottom: 40px;
+`;
+
+const PetSelectedImage = styled.div`
+  display: flex;
   gap: 40px;
   justify-content: center;
 
@@ -90,6 +97,7 @@ const ProcessButton = styled.div`
   text-align: center;
   border-radius: 20px;
   color: rgba(0, 0, 0, 0.51);
+  cursor: pointer;
 `;
 
 const ProcessImage = styled.img`
@@ -133,47 +141,102 @@ export default function Upload() {
   const [files, setFiles] = useState([]);
   const navigate = useNavigate();
   const [user, setUser] = useRecoilState(userState);
+  const [petList, setPetList] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+  console.log(selectedPet);
+  useEffect(() => {
+    axios
+      .get(API.PET_LISTS, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      })
+      .then((res) => {
+        setPetList(res.data.result);
+      })
+      .catch((err) => console.log(err));
 
+    axios.interceptors.response.use(
+      (res) => res,
+      async (error) => {
+        const {
+          config,
+          response: { data },
+        } = error;
+
+        if (data.code !== 401) {
+          return Promise.reject(error);
+        }
+        config.sent = true;
+        if (data.code === 401) {
+          localStorage.removeItem("jwt");
+          const refresh = localStorage.getItem("refresh_jwt");
+          if (refresh) {
+            localStorage.setItem("jwt", refresh);
+            localStorage.removeItem("refresh_jwt");
+          }
+          localStorage.removeItem("jwt");
+          navigate("/user/login");
+          return Promise.reject(error);
+        }
+      }
+    );
+  }, []);
   return (
     <UploadBox>
       <InspectHeader text="Image Upload" />
       <UploadMain>
-        <UploadCotainer files={!files.length}>
-          <div>
-            <span>펫을 선택해주세요</span>
-            <select>
-              <option></option>
-            </select>
-          </div>
-          <DragDrop files={files} setFiles={setFiles} />
-        </UploadCotainer>
-        {files.length > 0 && (
-          <UploadCotainer files={!files.length}>
-            <ProcessList>
-              {files.map((file) => (
-                <ProcessItemBox file={file} setFiles={setFiles} />
-              ))}
-            </ProcessList>
-            <ProcessButton
-              onClick={() => {
-                const formData = new FormData();
-                formData.append("petIdx", 4);
-                files.map((f) => formData.append("photo", f.object));
-                files.map((f) => console.log(f.object));
-
-                axios
-                  .post(API.DIAGNOSIS_IMAGE_UPLOAD, formData, {
-                    headers: {
-                      Authorization: `Bearer ${user}`,
-                      "Content-Type": "multipart/form-data", // 이것 필수
-                    },
-                  })
-                  .then((res) => console.log(res));
-              }}
-            >
-              AI 진단 시작
-            </ProcessButton>
-          </UploadCotainer>
+        <PetSelectedValue>
+          <label htmlFor="petSelected">펫을 선택해주세요</label>
+          <select
+            id="petSelected"
+            onChange={(event) => setSelectedPet(event.target.value)}
+          >
+            <option value="">값을 선택해주세요</option>
+            {petList.map(({ petIdx, petname }) => (
+              <option key={petIdx} value={petIdx}>
+                {petname}
+              </option>
+            ))}
+          </select>
+        </PetSelectedValue>
+        {selectedPet && (
+          <PetSelectedImage>
+            <UploadCotainer files={!files.length}>
+              <DragDrop files={files} setFiles={setFiles} />
+            </UploadCotainer>
+            {files.length > 0 && (
+              <UploadCotainer files={!files.length}>
+                <ProcessList>
+                  {files.map((file) => (
+                    <ProcessItemBox file={file} setFiles={setFiles} />
+                  ))}
+                </ProcessList>
+                <ProcessButton
+                  onClick={() => {
+                    const formData = new FormData();
+                    formData.append("petIdx", selectedPet);
+                    files.map((f) => formData.append("photo", f.object));
+                    axios
+                      .post(API.DIAGNOSIS_IMAGE_UPLOAD, formData, {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem(
+                            "jwt"
+                          )}`,
+                          "Content-Type": "multipart/form-data", // 이것 필수
+                        },
+                      })
+                      .then((res) => {
+                        console.log(res);
+                        navigate("/result", { state: res.data.result });
+                      });
+                  }}
+                >
+                  AI 진단 시작
+                </ProcessButton>
+              </UploadCotainer>
+            )}
+          </PetSelectedImage>
         )}
       </UploadMain>
     </UploadBox>

@@ -37,7 +37,6 @@ const ButtonItem = styled.div`
   }
 `;
 const DiagnosisHistoryBox = styled.div`
-  height: 100vh;
   background: #faf5f1;
   padding: 20px;
   min-height: 100vh;

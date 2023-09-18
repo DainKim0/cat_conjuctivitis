@@ -66,6 +66,7 @@ function Main() {
           <Logout
             onClick={() => {
               localStorage.removeItem("jwt");
+              localStorage.removeItem("refresh_jwt");
               window.location.replace("/");
             }}
           >

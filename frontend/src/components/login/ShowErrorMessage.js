@@ -20,7 +20,7 @@ export default function ShowErrorMessage({ errorMessage }) {
       {Object.keys(errorMessage).length > 0 && (
         <ErrorMessageBox>
           {Object.keys(errorMessage).map((type) => (
-            <li>
+            <li key={type}>
               {type} : {errorMessage[type]}
             </li>
           ))}

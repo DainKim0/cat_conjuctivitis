@@ -7,6 +7,8 @@ import { API } from "../config";
 import { ReactComponent as OpenEye } from "../asset/icons/OpenEye.svg";
 import { ReactComponent as CloseEye } from "../asset/icons/CloseEye.svg";
 import ShowErrorMessage from "../components/login/ShowErrorMessage";
+import { userState } from "../components/atom";
+import { useRecoilState } from "recoil";
 
 const LoginForm = styled.form`
   position: relative;
@@ -89,7 +91,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState({});
   const [passwordState, setPasswordState] = useState(false);
-
+  const [saveUser, setSaveUser] = useRecoilState(userState);
   return (
     <LoginForm>
       <FormLabel>user login</FormLabel>
@@ -143,6 +145,7 @@ export default function Login() {
             .then((res) => {
               setErrorMessage("");
               localStorage.setItem("jwt", res.data.result.access_token);
+              setSaveUser(res.data.result.access_token);
               localStorage.setItem(
                 "refresh_jwt",
                 res.data.result.refresh_token
@@ -154,7 +157,6 @@ export default function Login() {
       >
         login
       </FormButton>
-      <KakaoModule />
     </LoginForm>
   );
 }

@@ -26,4 +26,8 @@ export const API = {
   DIAGNOSIS_LISTS: "/uploader/diagnosis/list",
   //이미지
   DIAGNOSIS_IMAGE_UPLOAD: "/uploader/diagnosis/image-upload",
+
+  //카카오 로그인
+  KAKAOTOKEN: "https://kauth.kakao.com/oauth/token",
+  KAKAOLOGIN: "https://kapi.kakao.com/v2/user/me",
 };
