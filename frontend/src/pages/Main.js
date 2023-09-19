@@ -2,39 +2,51 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ReactComponent as Hexagon } from "../asset/icons/Hexagon.svg";
+const MainBox = styled.div``;
+
+const MainBody = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+`;
 
 const BackgroundImage = styled.img`
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100%;
   object-fit: cover;
   left: 0;
   top: 0;
 `;
 
 const BackgroundIcons = styled.div`
-  position: absolute;
-
-  &:nth-child(2) {
-    top: 10%;
-    left: 20%;
-  }
-  &:nth-child(3) {
-    top: calc(10% + 290px);
-    left: calc(20% + 246px);
-  }
-  &:nth-child(4) {
-    top: calc(10% + 580px);
-    left: calc(20% + 105px);
-  }
+  flex-direction: column;
+  display: flex;
+  width: 30%;
+  position: relative;
+  z-index: 1;
 
   & > div {
-    font-size: 20px;
-    font-weight: bold;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & > img {
+      width: 80%;
+    }
+  }
+
+  &:nth-child(2) {
+    align-self: center;
+  }
+  &:nth-child(3) {
+    align-self: end;
   }
 `;
 
@@ -59,49 +71,51 @@ function Main() {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <MainBox>
       <BackgroundImage src={require("../asset/mainImg.png")} />
-      <BackgroundIcons>
-        {localStorage.getItem("jwt") ? (
-          <Logout
-            onClick={() => {
-              localStorage.removeItem("jwt");
-              localStorage.removeItem("refresh_jwt");
-              window.location.replace("/");
-            }}
-          >
-            <span>logout</span>
-          </Logout>
-        ) : (
+      <MainBody>
+        <BackgroundIcons>
+          {localStorage.getItem("jwt") ? (
+            <Logout
+              onClick={() => {
+                localStorage.removeItem("jwt");
+                localStorage.removeItem("refresh_jwt");
+                window.location.replace("/");
+              }}
+            >
+              <span>logout</span>
+            </Logout>
+          ) : (
+            <div>
+              <img src={require("../asset/images/login.png")} />
+              <BackgroundLink>
+                <span onClick={() => navigate("/user/login")}>Log In</span>
+                <span onClick={() => navigate("/user/signup")}>Sign Up</span>
+              </BackgroundLink>
+            </div>
+          )}
+          <img src={require("../asset/images/polygon.png")} />
+        </BackgroundIcons>
+        <BackgroundIcons>
           <div>
-            <img src={require("../asset/images/login.png")} />
+            <img src={require("../asset/images/diagnosis.png")} />
             <BackgroundLink>
-              <span onClick={() => navigate("/user/login")}>Log In</span>
-              <span onClick={() => navigate("/user/signup")}>Sign Up</span>
+              <span onClick={() => navigate("/upload")}>Diagnosis</span>
             </BackgroundLink>
           </div>
-        )}
-        <Hexagon />
-      </BackgroundIcons>
-      <BackgroundIcons>
-        <div>
-          <img src={require("../asset/images/diagnosis.png")} />
-          <BackgroundLink>
-            <span onClick={() => navigate("/upload")}>Diagnosis</span>
-          </BackgroundLink>
-        </div>
-        <Hexagon />
-      </BackgroundIcons>
-      <BackgroundIcons>
-        <div>
-          <img src={require("../asset/images/mypage.png")} />
-          <BackgroundLink>
-            <span onClick={() => navigate("/petlist")}>My Page</span>
-          </BackgroundLink>
-        </div>
-        <Hexagon />
-      </BackgroundIcons>
-    </div>
+          <img src={require("../asset/images/polygon.png")} />
+        </BackgroundIcons>
+        <BackgroundIcons>
+          <div>
+            <img src={require("../asset/images/mypage.png")} />
+            <BackgroundLink>
+              <span onClick={() => navigate("/petlist")}>My Page</span>
+            </BackgroundLink>
+          </div>
+          <img src={require("../asset/images/polygon.png")} />
+        </BackgroundIcons>
+      </MainBody>
+    </MainBox>
   );
 }
 
